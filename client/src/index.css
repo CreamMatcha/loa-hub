@@ -1,0 +1,49 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── 라이트 모드 (기본) ── */
+:root {
+  --loa-bg:       248 248 252;
+  --loa-surface:  255 255 255;
+  --loa-surface2: 238 238 245;
+  --loa-border:   212 212 224;
+  --loa-gold:     154 114 40;
+  --loa-goldDim:  122 90  30;
+  --loa-gem:      82  72  184;
+  --loa-text:     26  26  38;
+  --loa-muted:    110 110 126;
+  --loa-error:    196 64  64;
+}
+
+/* ── 다크 모드 ── */
+html[data-theme="dark"] {
+  --loa-bg:       15  15  19;
+  --loa-surface:  26  26  34;
+  --loa-surface2: 34  34  44;
+  --loa-border:   46  46  58;
+  --loa-gold:     224 185 106;
+  --loa-goldDim:  168 136 74;
+  --loa-gem:      124 111 239;
+  --loa-text:     232 230 227;
+  --loa-muted:    139 139 150;
+  --loa-error:    217 106 106;
+}
+
+html, body, #root { height: 100%; }
+body {
+  background-color: rgb(var(--loa-bg));
+  color: rgb(var(--loa-text));
+  font-family: "Pretendard", system-ui, sans-serif;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: rgb(var(--loa-bg)); }
+::-webkit-scrollbar-thumb { background: rgb(var(--loa-border)); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--loa-muted)); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

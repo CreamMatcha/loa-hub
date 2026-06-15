@@ -1,0 +1,190 @@
+// 로스트아크 도구 사이트 모음 (정적 데이터)
+// category: 용도별 분류 | type: 'tool'(일반 도구) | 'character'(캐릭터명으로 딥링크 가능)
+// charUrl(name): 캐릭터명을 받아 해당 캐릭터 조회 URL을 반환 (type==='character'일 때)
+
+export const CATEGORIES = [
+  { id: "spec", label: "스펙 수치화", icon: "GraphUp", desc: "캐릭터 스펙을 점수로 환산" },
+  { id: "search", label: "캐릭터 검색", icon: "Search", desc: "원정대 / 캐릭터 정보 조회" },
+  { id: "upgrade", label: "강화 · 스펙업 효율", icon: "Hammer", desc: "재련 / 상재 / 스펙업 계산" },
+  { id: "deal", label: "딜 지분 분석", icon: "BarChartLine", desc: "스킬별 딜 지분 / 치명타 계산" },
+  { id: "life", label: "생활 · 제작", icon: "Tree", desc: "벌목 / 융화재료 제작 효율" },
+  { id: "market", label: "시세 조회", icon: "CashCoin", desc: "유각 / 보석 / 악세 실시간 시세" },
+  { id: "reward", label: "보상 효율", icon: "GiftFill", desc: "젬파고 / 지옥 보상 효율" },
+  { id: "raid", label: "숙제 · 레이드 관리", icon: "ListCheck", desc: "원정대 숙제 / 레이드 관리" },
+  { id: "arkgrid", label: "아크그리드 최적화", icon: "Grid3x3GapFill", desc: "젬 스캔 / 전투력 최적화" },
+];
+
+export const TOOLS = [
+  // 1. 스펙 수치화
+  {
+    id: "lopec",
+    name: "로펙",
+    url: "https://lopec.kr/",
+    category: "spec",
+    type: "character",
+    desc: "캐릭터 스펙을 수치화하여 점수로 보여주는 대표 사이트",
+    charUrl: (name) => `https://lopec.kr/character/specPoint/${encodeURIComponent(name)}`,
+  },
+
+  // 2. 캐릭터 검색
+  {
+    id: "loawa",
+    name: "로아와",
+    url: "https://loawa.com/",
+    category: "search",
+    type: "character",
+    desc: "캐릭터 통계 보기 편함",
+    charUrl: (name) => `https://loawa.com/char/${encodeURIComponent(name)}`,
+  },
+  {
+    id: "iloa",
+    name: "일로아",
+    url: "https://iloa.gg/",
+    category: "search",
+    type: "character",
+    desc: "군장검사 · 숙제 · 경매계산기 기능",
+    charUrl: (name) => `https://iloa.gg/character/${encodeURIComponent(name)}`,
+    extra: [{ label: "경매계산기", url: "https://iloa.gg/tools/bid" }],
+  },
+  {
+    id: "kloa",
+    name: "클로아",
+    url: "https://kloa.gg/",
+    category: "search",
+    type: "character",
+    desc: "뉴비용 떠돌이 상인 현황 검색 가능",
+    charUrl: (name) => `https://kloa.gg/characters/${encodeURIComponent(name)}`,
+  },
+
+  // 3. 강화 · 스펙업 효율
+  {
+    id: "icepeng",
+    name: "아이스펭",
+    url: "https://loa.icepeng.com/",
+    category: "upgrade",
+    type: "tool",
+    desc: "재련 / 상급재련 계산 사이트",
+  },
+  {
+    id: "loaup",
+    name: "로아업",
+    url: "https://loaup.com/",
+    category: "upgrade",
+    type: "tool",
+    desc: "내 캐릭터 스펙업을 효율적으로",
+  },
+  {
+    id: "loavesting",
+    name: "로아베스팅",
+    url: "https://www.loavesting.com/",
+    category: "upgrade",
+    type: "tool",
+    desc: "재련견적 / 재료가격 / 스펙 시뮬레이터",
+  },
+  {
+    id: "gcalc",
+    name: "껨산기",
+    url: "https://www.gcalc.kr/",
+    category: "upgrade",
+    type: "tool",
+    desc: "패키지 효율 / 성장 루트 / 경매계산",
+  },
+
+  // 4. 딜 지분 분석
+  {
+    id: "lo4",
+    name: "로아랩",
+    url: "https://lo4.app/",
+    category: "deal",
+    type: "tool",
+    desc: "음돌 · 치명타 계산 외 여러 기능",
+  },
+
+  // 5. 생활 · 제작
+  {
+    id: "lostgld",
+    name: "로스트골드",
+    url: "https://lostgld.com/",
+    category: "life",
+    type: "tool",
+    desc: "벌목도구 계산 / 융화재료 제작 효율",
+  },
+
+  // 6. 시세 조회
+  {
+    id: "loashop",
+    name: "로아샵",
+    url: "https://loa-shop.pages.dev/",
+    category: "market",
+    type: "tool",
+    desc: "실시간 유각 시세",
+  },
+  {
+    id: "loachart",
+    name: "로아차트",
+    url: "https://loachart.com/rewardcalc",
+    category: "market",
+    type: "tool",
+    desc: "군단장 더보기 효율",
+  },
+  {
+    id: "loagap",
+    name: "로아갭",
+    url: "https://loagap.com/",
+    category: "market",
+    type: "tool",
+    desc: "유각 보석 · 악세 · 젬 가격",
+  },
+  {
+    id: "loatool",
+    name: "로아도구",
+    url: "https://loatool.taeu.kr/",
+    category: "market",
+    type: "tool",
+    desc: "제작효율 / 유각시세 / 쌀산기",
+  },
+
+  // 7. 보상 효율
+  {
+    id: "loatto",
+    name: "로아또",
+    url: "https://loatto.kr/",
+    category: "reward",
+    type: "tool",
+    desc: "보조재료 실제가치 / 특재효율 한눈에",
+  },
+
+  // 8. 숙제 · 레이드 관리
+  {
+    id: "rloa",
+    name: "R로아",
+    url: "https://rloa.gg/",
+    category: "raid",
+    type: "tool",
+    desc: "레이드 숙제 보며 빼기 편함",
+  },
+
+  // 9. 아크그리드 최적화
+  {
+    id: "aloa",
+    name: "AL로아",
+    url: "https://aloa.gg/ko/arkgrid",
+    category: "arkgrid",
+    type: "tool",
+    desc: "젬 스캔 전투력 최적화",
+  },
+  {
+    id: "arkgrid-locator",
+    name: "젬 로케이터",
+    url: "https://airplaner.github.io/lostark-arkgrid-gem-locator-v2/",
+    category: "arkgrid",
+    type: "tool",
+    desc: "젬 스캔 전투력 최적화 (빠름)",
+  },
+];
+
+// 헬퍼: 카테고리별 도구 그룹핑
+export const getToolsByCategory = (catId) => TOOLS.filter((t) => t.category === catId);
+// 헬퍼: 캐릭터명 딥링크 가능한 도구만
+export const getCharacterTools = () => TOOLS.filter((t) => t.type === "character");
+export const getToolById = (id) => TOOLS.find((t) => t.id === id);
