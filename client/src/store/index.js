@@ -24,13 +24,11 @@ const storage = {
 import authReducer from "./slices/authSlice";
 import rosterReducer from "./slices/rosterSlice";
 import favoritesReducer from "./slices/favoritesSlice";
-import presetReducer from "./slices/presetSlice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
   roster: rosterReducer,
   favorites: favoritesReducer,
-  presets: presetReducer,
 });
 
 // 새로고침 후에도 유지할 슬라이스만 화이트리스트로 지정
@@ -38,7 +36,7 @@ const persistConfig = {
   key: "loa-hub-root",
   version: 2,
   storage,
-  whitelist: ["auth", "roster", "favorites", "presets"],
+  whitelist: ["auth", "roster", "favorites"],
   // v1(characters[]) → v2(rosters[]) 구조 변환
   migrate: (state) => {
     if (!state) return Promise.resolve(state);
