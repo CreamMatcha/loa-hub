@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { StarFill, ChevronUp, ChevronDown } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
@@ -6,11 +6,22 @@ import { selectFavoriteItems, reorderFavorites } from "../store/slices/favorites
 import { TOOLS } from "../data/tools";
 import ToolCard from "../components/tools/ToolCard";
 
+// Tailwind의 sm 브레이크포인트(640px)와 동일한 기준으로 PC/모바일 구분
+const DESKTOP_QUERY = "(min-width: 640px)";
+
 export default function Favorites() {
   const favItems = useSelector(selectFavoriteItems);
   const dispatch = useDispatch();
   const [dragIndex, setDragIndex] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia(DESKTOP_QUERY).matches);
+
+  useEffect(() => {
+    const mq = window.matchMedia(DESKTOP_QUERY);
+    const handler = (e) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const resolvedFavs = favItems
     .map((item, index) => {
@@ -50,17 +61,18 @@ export default function Favorites() {
   }
 
   function renderCard({ tool, toolKey, index, pos }, stretch) {
+    const draggableNow = isEditMode && isDesktop;
     return (
       <div
         key={`${tool.id}::${toolKey ?? ""}`}
-        draggable={isEditMode}
+        draggable={draggableNow}
         onDragStart={() => setDragIndex(index)}
         onDragOver={(e) => e.preventDefault()}
         onDrop={() => handleDrop(index)}
         onDragEnd={() => setDragIndex(null)}
-        className={`flex items-stretch gap-2 ${stretch ? "h-full" : ""} ${isEditMode ? "cursor-grab active:cursor-grabbing" : ""} ${dragIndex === index ? "opacity-40" : ""}`}
+        className={`flex items-stretch gap-2 ${stretch ? "h-full" : ""} ${draggableNow ? "cursor-grab active:cursor-grabbing" : ""} ${dragIndex === index ? "opacity-40" : ""}`}
       >
-        {isEditMode && (
+        {isEditMode && !isDesktop && (
           <div className="flex flex-col justify-center gap-1">
             <button
               onClick={() => handleMove(pos, -1)}
