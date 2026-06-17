@@ -1,16 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Search as SearchIcon, PersonPlusFill, ArrowClockwise, Trash, PersonFill } from "react-bootstrap-icons";
-import { selectRosters, addRoster, addSingleCharacter, removeRoster, clearRoster } from "../store/slices/rosterSlice";
+import {
+  selectRosters,
+  selectAllCharacters,
+  addRoster,
+  addSingleCharacter,
+  removeRoster,
+  clearRoster,
+  updateCharacter,
+} from "../store/slices/rosterSlice";
 import { apiFetchRoster, apiFetchProfile } from "../api";
+import { store } from "../store";
 import CharacterCard from "../components/character/CharacterCard";
 
 export default function Dashboard() {
   const rosters = useSelector(selectRosters);
+  const allCharacters = useSelector(selectAllCharacters);
   const dispatch = useDispatch();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(null); // null | "roster" | "character"
   const [error, setError] = useState("");
+
+  // 원정대 탭 진입 시 저장된 캐릭터들의 전투력 · 레벨 갱신
+  useEffect(() => {
+    const characters = store.getState().roster.rosters.flatMap((r) => r.characters);
+    characters.forEach((c) => {
+      apiFetchProfile(c.name)
+        .then((profile) => {
+          dispatch(updateCharacter({ name: c.name, combatPower: profile.combatPower ?? null, level: profile.level }));
+        })
+        .catch(() => {});
+    });
+  }, [dispatch]);
 
   const handleFetchRoster = async () => {
     const name = input.trim();
@@ -44,6 +66,10 @@ export default function Dashboard() {
     setError("");
     try {
       const profile = await apiFetchProfile(name);
+      if (allCharacters.some((c) => c.name === profile.name)) {
+        setError("이미 추가된 캐릭터예요.");
+        return;
+      }
       dispatch(addSingleCharacter({
         name: profile.name,
         server: profile.server,

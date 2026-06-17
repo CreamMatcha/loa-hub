@@ -1,6 +1,7 @@
 // 로스트아크 도구 사이트 모음 (정적 데이터)
 // category: 용도별 분류 | type: 'tool'(일반 도구) | 'character'(캐릭터명으로 딥링크 가능)
 // charUrl(name): 캐릭터명을 받아 해당 캐릭터 조회 URL을 반환 (type==='character'일 때)
+// tools: 해당 사이트의 도구 목록 [{ key, label, url }] — 선택 시 바로가기 URL로 사용
 
 export const CATEGORIES = [
   { id: "spec", label: "스펙 수치화", icon: "GraphUp", desc: "캐릭터 스펙을 점수로 환산" },
@@ -24,6 +25,10 @@ export const TOOLS = [
     type: "character",
     desc: "캐릭터 스펙을 수치화하여 점수로 보여주는 대표 사이트",
     charUrl: (name) => `https://lopec.kr/character/specPoint/${encodeURIComponent(name)}`,
+    tools: [
+      { key: "mvp", label: "기여도 계산기", url: "https://lopec.kr/tool/mvp" },
+      { key: "reward", label: "지옥 보상 효율 계산기", url: "https://lopec.kr/tool/reward" },
+    ],
   },
 
   // 2. 캐릭터 검색
@@ -35,6 +40,9 @@ export const TOOLS = [
     type: "character",
     desc: "캐릭터 통계 보기 편함",
     charUrl: (name) => `https://loawa.com/char/${encodeURIComponent(name)}`,
+    tools: [
+      { key: "guild", label: "길드 검색", url: "https://loawa.com/guild" },
+    ],
   },
   {
     id: "iloa",
@@ -44,7 +52,11 @@ export const TOOLS = [
     type: "character",
     desc: "군장검사 · 숙제 · 경매계산기 기능",
     charUrl: (name) => `https://iloa.gg/character/${encodeURIComponent(name)}`,
-    extra: [{ label: "경매계산기", url: "https://iloa.gg/tools/bid" }],
+    tools: [
+      { key: "multi", label: "군장 검사", url: "https://iloa.gg/multi" },
+      { key: "guilds", label: "길드 검색", url: "https://iloa.gg/guilds" },
+      { key: "bid", label: "경매계산기", url: "https://iloa.gg/tools/bid" },
+    ],
   },
   {
     id: "kloa",
@@ -54,6 +66,9 @@ export const TOOLS = [
     type: "character",
     desc: "뉴비용 떠돌이 상인 현황 검색 가능",
     charUrl: (name) => `https://kloa.gg/characters/${encodeURIComponent(name)}`,
+    tools: [
+      { key: "merchant", label: "떠돌이 상인", url: "https://kloa.gg/merchant" },
+    ],
   },
 
   // 3. 강화 · 스펙업 효율
@@ -64,6 +79,10 @@ export const TOOLS = [
     category: "upgrade",
     type: "tool",
     desc: "재련 / 상급재련 계산 사이트",
+    tools: [
+      { key: "refining", label: "재련 최적화", url: "https://loa.icepeng.com/refining" },
+      { key: "advanced-refining", label: "상급 재련 최적화", url: "https://loa.icepeng.com/advanced-refining" },
+    ],
   },
   {
     id: "loaup",
@@ -72,6 +91,9 @@ export const TOOLS = [
     category: "upgrade",
     type: "tool",
     desc: "내 캐릭터 스펙업을 효율적으로",
+    tools: [
+      { key: "ranking", label: "랭킹", url: "https://loaup.com/ranking" },
+    ],
   },
   {
     id: "loavesting",
@@ -80,6 +102,9 @@ export const TOOLS = [
     category: "upgrade",
     type: "tool",
     desc: "재련견적 / 재료가격 / 스펙 시뮬레이터",
+    tools: [
+      { key: "calculator", label: "재련견적서", url: "https://www.loavesting.com/calculator/t4" },
+    ],
   },
   {
     id: "gcalc",
@@ -88,6 +113,9 @@ export const TOOLS = [
     category: "upgrade",
     type: "tool",
     desc: "패키지 효율 / 성장 루트 / 경매계산",
+    tools: [
+      { key: "package", label: "패키지 효율", url: "https://www.gcalc.kr/package-efficiency" },
+    ],
   },
 
   // 4. 딜 지분 분석
@@ -98,6 +126,10 @@ export const TOOLS = [
     category: "deal",
     type: "tool",
     desc: "음돌 · 치명타 계산 외 여러 기능",
+    tools: [
+      { key: "hell-reward", label: "지옥 보상 효율", url: "https://lo4.app/tools/hell-reward" },
+      { key: "blunt-thorn", label: "치명타 계산기", url: "https://lo4.app/tools/blunt-thorn" },
+    ],
   },
 
   // 5. 생활 · 제작
@@ -108,6 +140,9 @@ export const TOOLS = [
     category: "life",
     type: "tool",
     desc: "벌목도구 계산 / 융화재료 제작 효율",
+    tools: [
+      { key: "craft", label: "융화재료 제작", url: "https://lostgld.com/craft" },
+    ],
   },
 
   // 6. 시세 조회
@@ -118,6 +153,10 @@ export const TOOLS = [
     category: "market",
     type: "tool",
     desc: "실시간 유각 시세",
+    tools: [
+      { key: "jewel", label: "보석 시세", url: "https://loa-shop.pages.dev/jewel" },
+      { key: "zem", label: "젬 시세", url: "https://loa-shop.pages.dev/zem" },
+    ],
   },
   {
     id: "loachart",
@@ -134,6 +173,9 @@ export const TOOLS = [
     category: "market",
     type: "tool",
     desc: "유각 보석 · 악세 · 젬 가격",
+    tools: [
+      { key: "accessory", label: "악세 시세", url: "https://loagap.com/price/accessory" },
+    ],
   },
   {
     id: "loatool",

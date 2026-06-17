@@ -34,16 +34,26 @@ const rootReducer = combineReducers({
 // 새로고침 후에도 유지할 슬라이스만 화이트리스트로 지정
 const persistConfig = {
   key: "loa-hub-root",
-  version: 2,
+  version: 3,
   storage,
   whitelist: ["auth", "roster", "favorites"],
-  // v1(characters[]) → v2(rosters[]) 구조 변환
   migrate: (state) => {
     if (!state) return Promise.resolve(state);
+    // v1 → v2: roster.characters[] → roster.rosters[]
     if (state.roster && state.roster.characters !== undefined) {
       return Promise.resolve({
         ...state,
         roster: { rosters: [] },
+        favorites: { items: [] },
+      });
+    }
+    // v2 → v3: favorites.ids(string[]) → favorites.items({toolId,toolKey}[])
+    if (state.favorites && Array.isArray(state.favorites.ids)) {
+      return Promise.resolve({
+        ...state,
+        favorites: {
+          items: (state.favorites.ids || []).map((id) => ({ toolId: id, toolKey: null })),
+        },
       });
     }
     return Promise.resolve(state);

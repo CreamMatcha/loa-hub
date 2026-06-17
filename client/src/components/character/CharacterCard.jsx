@@ -1,26 +1,13 @@
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Trash, BoxArrowUpRight, Diagram3 } from "react-bootstrap-icons";
-import { removeCharacter, updateCharacter } from "../../store/slices/rosterSlice";
+import { removeCharacter } from "../../store/slices/rosterSlice";
 import { getCharacterTools } from "../../data/tools";
 import { openLinks } from "../../utils/openLinks";
-import { apiFetchProfile } from "../../api";
 
 // 직업별 색상 힌트(간단): 클래스명 첫 글자 기반 대신 골드 통일 + 보조색
 export default function CharacterCard({ character }) {
   const dispatch = useDispatch();
   const charTools = getCharacterTools();
-
-  useEffect(() => {
-    if (character.combatPower != null) return;
-    apiFetchProfile(character.name)
-      .then((profile) => {
-        if (profile.combatPower != null) {
-          dispatch(updateCharacter({ name: character.name, combatPower: profile.combatPower }));
-        }
-      })
-      .catch(() => {});
-  }, [character.name]);
 
   // 이 캐릭터를 캐릭조회 도구 전체로 한 번에 열기
   const openAll = () => {

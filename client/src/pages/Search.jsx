@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Search as SearchIcon,
   ArrowClockwise,
@@ -10,7 +10,7 @@ import {
   X,
 } from "react-bootstrap-icons";
 import { apiFetchProfile } from "../api";
-import { addSingleCharacter } from "../store/slices/rosterSlice";
+import { addSingleCharacter, selectAllCharacters } from "../store/slices/rosterSlice";
 import { getToolById } from "../data/tools";
 import { openLinks } from "../utils/openLinks";
 
@@ -30,6 +30,7 @@ function saveRecent(name) {
 
 export default function Search() {
   const dispatch = useDispatch();
+  const allCharacters = useSelector(selectAllCharacters);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -38,6 +39,7 @@ export default function Search() {
   const [added, setAdded] = useState(false);
 
   const searchTools = SEARCH_TOOL_IDS.map((id) => getToolById(id)).filter(Boolean);
+  const alreadyInRoster = result && allCharacters.some((c) => c.name === result.name);
 
   const handleSearch = async (name) => {
     const n = (name ?? input).trim();
@@ -159,11 +161,11 @@ export default function Search() {
               </div>
               <button
                 onClick={handleAddToRoster}
-                disabled={added}
+                disabled={added || alreadyInRoster}
                 className="flex shrink-0 items-center gap-1.5 rounded-lg border border-loa-goldDim/40 bg-loa-gold/10 px-3 py-1.5 text-xs font-semibold text-loa-gold transition-colors hover:bg-loa-gold hover:text-loa-bg disabled:cursor-default disabled:opacity-60"
               >
                 <PersonPlusFill size={12} />
-                {added ? "추가됨" : "원정대에 추가"}
+                {added || alreadyInRoster ? "추가됨" : "원정대에 추가"}
               </button>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2">

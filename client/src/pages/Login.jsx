@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { PersonFill, LockFill, HexagonFill } from "react-bootstrap-icons";
 import { setCredentials } from "../store/slices/authSlice";
 import { setRosters } from "../store/slices/rosterSlice";
-import { setFavorites, selectFavoriteIds } from "../store/slices/favoritesSlice";
+import { setFavorites, selectFavoriteItems } from "../store/slices/favoritesSlice";
 import { apiLogin, apiRegister, apiGetMyData } from "../api";
 
 export default function Login() {
@@ -15,7 +15,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const localFavoriteIds = useSelector(selectFavoriteIds);
+  const localFavoriteItems = useSelector(selectFavoriteItems);
 
   const submit = async () => {
     if (!username.trim() || !password) {
@@ -32,9 +32,20 @@ export default function Login() {
       // 서버 데이터 머지 (실패해도 로그인은 유지)
       try {
         const serverData = await apiGetMyData();
-        // 즐겨찾기: 로컬 + 서버 합집합
+        // 즐겨찾기: 로컬 + 서버 합집합 (구버전 string[] → {toolId,toolKey}[] 자동 변환)
         if (serverData?.favorites?.length) {
-          const merged = [...new Set([...localFavoriteIds, ...serverData.favorites])];
+          const toItems = (arr) =>
+            arr.map((x) =>
+              typeof x === "string" ? { toolId: x, toolKey: null } : x
+            );
+          const serverItems = toItems(serverData.favorites);
+          const merged = [...localFavoriteItems];
+          for (const si of serverItems) {
+            const exists = merged.some(
+              (m) => m.toolId === si.toolId && (m.toolKey ?? null) === (si.toolKey ?? null)
+            );
+            if (!exists) merged.push(si);
+          }
           dispatch(setFavorites(merged));
         }
         // 원정대: 새 형식(rosters 배열)인 경우만 적용. 구버전 flat 배열은 무시.
