@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Search as SearchIcon, PersonPlusFill, ArrowClockwise, Trash, PersonFill } from "react-bootstrap-icons";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Search as SearchIcon, PersonPlusFill, ArrowClockwise, Trash, PersonFill, X } from "react-bootstrap-icons";
 import {
   selectRosters,
   selectAllCharacters,
@@ -18,9 +19,25 @@ export default function Dashboard() {
   const rosters = useSelector(selectRosters);
   const allCharacters = useSelector(selectAllCharacters);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(null); // null | "roster" | "character"
   const [error, setError] = useState("");
+  const [welcomeMsg, setWelcomeMsg] = useState(() => {
+    if (!location.state?.justLoggedIn) return null;
+    return location.state.isNewAccount
+      ? "가입 완료! 즐겨찾기·원정대가 이 계정에 저장돼요."
+      : "로그인 완료! 기기에 있던 즐겨찾기·원정대가 계정 데이터와 동기화됐어요.";
+  });
+
+  // 새로고침 시 안내 배너가 다시 뜨지 않도록 라우터 state 제거
+  useEffect(() => {
+    if (location.state?.justLoggedIn) {
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 원정대 탭 진입 시 저장된 캐릭터들의 전투력 · 레벨 갱신
   useEffect(() => {
@@ -132,6 +149,19 @@ export default function Dashboard() {
           {loading === "character" ? "불러오는 중" : "캐릭터 추가"}
         </button>
       </div>
+
+      {welcomeMsg && (
+        <div className="mt-3 flex items-center justify-between gap-2 rounded-lg border border-loa-goldDim/30 bg-loa-gold/10 px-3 py-2 text-sm text-loa-gold">
+          <span>{welcomeMsg}</span>
+          <button
+            onClick={() => setWelcomeMsg(null)}
+            aria-label="안내 닫기"
+            className="text-loa-gold/70 transition-colors hover:text-loa-gold"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
 
       {error && (
         <p className="mt-3 rounded-lg border border-loa-error/30 bg-loa-error/10 px-3 py-2 text-sm text-loa-error">

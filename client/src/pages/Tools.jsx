@@ -23,6 +23,7 @@ export default function Tools() {
       <h1 className="font-display text-2xl font-bold">도구 사이트</h1>
       <p className="mt-1 text-sm text-loa-muted">
         용도별로 정리된 로스트아크 편의 도구. 별을 눌러 즐겨찾기에 추가하세요.
+        하위 도구를 선택하면 그 도구로 바로가기·즐겨찾기가 연결돼요.
       </p>
 
       {/* 검색 */}

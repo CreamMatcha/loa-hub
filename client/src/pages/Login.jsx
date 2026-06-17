@@ -55,7 +55,7 @@ export default function Login() {
         }
       } catch (_) {}
 
-      navigate("/dashboard");
+      navigate("/dashboard", { state: { justLoggedIn: true, isNewAccount: mode === "register" } });
     } catch (e) {
       setError(e.response?.data?.message || "요청 처리 중 문제가 발생했어요.");
     } finally {
