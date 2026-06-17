@@ -101,18 +101,25 @@ export default function Favorites() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <StarFill className="text-loa-gold" size={20} />
-          <h1 className="font-display text-2xl font-bold">즐겨찾기</h1>
+          <h1 className="whitespace-nowrap font-display text-2xl font-bold">즐겨찾기</h1>
         </div>
         {resolvedFavs.length > 0 && (
-          <button
-            onClick={() => setIsEditMode((v) => !v)}
-            className="rounded-lg border border-loa-border px-3 py-1.5 text-sm font-medium text-loa-muted transition-colors hover:border-loa-goldDim hover:text-loa-text"
-          >
-            {isEditMode ? "완료" : "편집"}
-          </button>
+          <div className="flex items-center gap-2">
+            {isEditMode && (
+              <span className="whitespace-nowrap text-xs text-loa-muted">
+                {isDesktop ? "드래그해서 순서를 바꿔보세요" : "화살표로 순서를 바꿔보세요"}
+              </span>
+            )}
+            <button
+              onClick={() => setIsEditMode((v) => !v)}
+              className="rounded-lg border border-loa-border px-3 py-1.5 text-sm font-medium text-loa-muted transition-colors hover:border-loa-goldDim hover:text-loa-text"
+            >
+              {isEditMode ? "완료" : "편집"}
+            </button>
+          </div>
         )}
       </div>
       <p className="mt-1 text-sm text-loa-muted">
