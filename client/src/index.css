@@ -15,6 +15,7 @@
   --loa-text:     26  26  38;
   --loa-muted:    110 110 126;
   --loa-error:    196 64  64;
+  background-color: rgb(var(--loa-bg));
 }
 
 /* ── 다크 모드 ── */
@@ -29,6 +30,7 @@ html[data-theme="dark"] {
   --loa-text:     232 230 227;
   --loa-muted:    139 139 150;
   --loa-error:    217 106 106;
+  background-color: rgb(var(--loa-bg));
 }
 
 html, body, #root { height: 100%; }
