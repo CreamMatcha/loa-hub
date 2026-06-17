@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { StarFill } from "react-bootstrap-icons";
+import { StarFill, ChevronUp, ChevronDown } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { selectFavoriteItems, reorderFavorites } from "../store/slices/favoritesSlice";
 import { TOOLS } from "../data/tools";
@@ -18,7 +18,8 @@ export default function Favorites() {
       if (!tool) return null;
       return { tool, toolKey: item.toolKey ?? null, index };
     })
-    .filter(Boolean);
+    .filter(Boolean)
+    .map((item, pos) => ({ ...item, pos }));
 
   // 간소화 카드(도구 선택됨)는 연속될 경우 둘씩 묶어 일반 카드 한 칸 자리에 쌓음
   const slots = [];
@@ -40,7 +41,15 @@ export default function Favorites() {
     setDragIndex(null);
   }
 
-  function renderCard({ tool, toolKey, index }, stretch) {
+  function handleMove(pos, direction) {
+    const targetPos = pos + direction;
+    if (targetPos < 0 || targetPos >= resolvedFavs.length) return;
+    dispatch(
+      reorderFavorites({ from: resolvedFavs[pos].index, to: resolvedFavs[targetPos].index })
+    );
+  }
+
+  function renderCard({ tool, toolKey, index, pos }, stretch) {
     return (
       <div
         key={`${tool.id}::${toolKey ?? ""}`}
@@ -49,9 +58,31 @@ export default function Favorites() {
         onDragOver={(e) => e.preventDefault()}
         onDrop={() => handleDrop(index)}
         onDragEnd={() => setDragIndex(null)}
-        className={`${stretch ? "h-full" : ""} ${isEditMode ? "cursor-grab active:cursor-grabbing" : ""} ${dragIndex === index ? "opacity-40" : ""}`}
+        className={`flex items-stretch gap-2 ${stretch ? "h-full" : ""} ${isEditMode ? "cursor-grab active:cursor-grabbing" : ""} ${dragIndex === index ? "opacity-40" : ""}`}
       >
-        <ToolCard tool={tool} initialToolKey={toolKey} />
+        {isEditMode && (
+          <div className="flex flex-col justify-center gap-1">
+            <button
+              onClick={() => handleMove(pos, -1)}
+              disabled={pos === 0}
+              aria-label="위로 이동"
+              className="rounded-md border border-loa-border p-1 text-loa-muted transition-colors hover:border-loa-goldDim hover:text-loa-text disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <ChevronUp size={14} />
+            </button>
+            <button
+              onClick={() => handleMove(pos, 1)}
+              disabled={pos === resolvedFavs.length - 1}
+              aria-label="아래로 이동"
+              className="rounded-md border border-loa-border p-1 text-loa-muted transition-colors hover:border-loa-goldDim hover:text-loa-text disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <ChevronDown size={14} />
+            </button>
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <ToolCard tool={tool} initialToolKey={toolKey} />
+        </div>
       </div>
     );
   }
