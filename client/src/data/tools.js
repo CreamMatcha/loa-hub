@@ -37,6 +37,9 @@ export const TOOLS = [
     category: "main",
     type: "tool",
     desc: "로스트아크 공식 홈페이지",
+    tools: [
+      { key: "notice", label: "공지사항", url: "https://lostark.game.onstove.com/News/Notice/List" },
+    ],
   },
   {
     id: "loa-inven",
