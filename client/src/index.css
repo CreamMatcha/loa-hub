@@ -94,3 +94,16 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+/* Home 반응형 */
+@media (max-width: 639px) {
+  .home-hero {
+    grid-template-columns: 1fr !important;
+    padding: 28px 20px !important;
+  }
+  .home-preview { display: none !important; }
+  .home-h1 { font-size: 30px !important; line-height: 1.2 !important; }
+  .home-metrics { gap: 20px !important; }
+  .home-btns { flex-wrap: wrap !important; }
+  .home-cats { grid-template-columns: 1fr !important; }
+}

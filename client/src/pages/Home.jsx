@@ -37,7 +37,7 @@ export default function Home() {
     <div style={{ maxWidth: 1120, margin: "0 auto", padding: "40px 24px 80px", animation: "loaFade .4s ease both" }}>
 
       {/* Hero */}
-      <section style={{
+      <section className="home-hero" style={{
         position: "relative", overflow: "hidden",
         border: "1px solid var(--border)",
         borderRadius: "calc(var(--r) + 6px)",
@@ -74,7 +74,7 @@ export default function Home() {
             로스트아크 편의 도구 허브
           </span>
 
-          <h1 style={{ margin: "18px 0 0", fontSize: 46, lineHeight: 1.1, fontWeight: 800, letterSpacing: "-0.03em" }}>
+          <h1 className="home-h1" style={{ margin: "18px 0 0", fontSize: 46, lineHeight: 1.1, fontWeight: 800, letterSpacing: "-0.03em" }}>
             흩어진 로아 도구,<br />
             <span style={{ color: "var(--gold-text)" }}>한 곳에서</span> 한 번에.
           </h1>
@@ -83,7 +83,7 @@ export default function Home() {
             스펙 수치화부터 시세 · 재련 · 숙제 관리까지. 자주 쓰는 도구를 즐겨찾기하고, 원정대를 등록해 캐릭터 조회 사이트로 바로 이동하세요.
           </p>
 
-          <div style={{ marginTop: 28, display: "flex", gap: 12 }}>
+          <div className="home-btns" style={{ marginTop: 28, display: "flex", gap: 12 }}>
             <Link to="/tools" style={{
               padding: "13px 24px", borderRadius: 12, border: "none",
               background: "linear-gradient(140deg, var(--gold), var(--gold-deep))",
@@ -102,7 +102,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div style={{ marginTop: 34, display: "flex", gap: 40 }}>
+          <div className="home-metrics" style={{ marginTop: 34, display: "flex", gap: 40 }}>
             <Metric value={TOOLS.length} label="도구 사이트" />
             <Metric value={CATEGORIES.length} label="카테고리" />
             <Metric value={TOOLS.filter((t) => t.type === "character").length} label="캐릭터 조회 연동" />
@@ -110,7 +110,7 @@ export default function Home() {
         </div>
 
         {/* 우측 프리뷰 카드 */}
-        <div style={{
+        <div className="home-preview" style={{
           position: "relative",
           background: "color-mix(in srgb, var(--bg) 55%, transparent)",
           border: "1px solid var(--border)", borderRadius: "var(--r)",
@@ -177,7 +177,7 @@ export default function Home() {
       <section style={{ marginTop: 48 }}>
         <h2 style={{ margin: 0, fontSize: 21, fontWeight: 800, letterSpacing: "-0.02em" }}>카테고리</h2>
         <p style={{ margin: "6px 0 22px", fontSize: 14, color: "var(--muted)" }}>용도별로 정리된 도구를 살펴보세요.</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+        <div className="home-cats" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
           {CATEGORIES.map((cat) => (
             <CategoryCard key={cat.id} cat={cat} count={getToolsByCategory(cat.id).length} />
           ))}
