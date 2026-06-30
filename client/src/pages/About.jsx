@@ -1,4 +1,5 @@
 import { Github, EnvelopeFill, Joystick, CodeSlash } from "react-bootstrap-icons";
+import profileImg from "../assets/profile.png";
 
 const stack = ["React", "Redux Toolkit", "React Router", "Tailwind CSS", "Node.js", "Express", "MongoDB"];
 
@@ -12,16 +13,15 @@ export default function About() {
       }}>
         {/* 헤더 */}
         <div style={{ display: "flex", alignItems: "flex-start", gap: 24, flexWrap: "wrap" }}>
-          {/* 프로필 플레이스홀더 */}
-          <div style={{
-            flexShrink: 0, width: 84, height: 84, borderRadius: 16,
-            border: "2px solid color-mix(in srgb, var(--gold) 55%, transparent)",
-            background: "repeating-linear-gradient(135deg, var(--surface2) 0 10px, color-mix(in srgb, var(--gold) 7%, var(--surface2)) 10px 20px)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 30, userSelect: "none",
-          }}>
-            🎮
-          </div>
+          <img
+            src={profileImg}
+            alt="프로필"
+            style={{
+              flexShrink: 0, width: 84, height: 84, borderRadius: 16,
+              border: "2px solid color-mix(in srgb, var(--gold) 55%, transparent)",
+              objectFit: "cover",
+            }}
+          />
 
           {/* 소개 텍스트 */}
           <div style={{ flex: 1, minWidth: 0 }}>
