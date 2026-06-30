@@ -74,7 +74,7 @@ export default function Navbar() {
 
         {/* 데스크탑 네비 */}
         <ul className="hidden sm:flex"
-          style={{ display: "flex", alignItems: "center", gap: 4, flex: 1, listStyle: "none", margin: 0, padding: 0 }}>
+          style={{ alignItems: "center", gap: 4, flex: 1, listStyle: "none", margin: 0, padding: 0 }}>
           {links.map(({ to, label, end }) => (
             <li key={to}>
               <NavLink to={to} end={end} style={{ textDecoration: "none" }}>
