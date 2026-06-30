@@ -3,48 +3,93 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── 라이트 모드 (기본) ── */
+/* === 다크 (기본) === */
 :root {
-  --loa-bg:       248 248 252;
-  --loa-surface:  255 255 255;
-  --loa-surface2: 238 238 245;
-  --loa-border:   212 212 224;
-  --loa-gold:     154 114 40;
-  --loa-goldDim:  122 90  30;
-  --loa-gem:      82  72  184;
-  --loa-text:     26  26  38;
-  --loa-muted:    110 110 126;
-  --loa-error:    196 64  64;
-  background-color: rgb(var(--loa-bg));
+  --bg:        #0A1020;
+  --bg2:       #0D1526;
+  --surface:   #121C30;
+  --surface2:  #18243C;
+  --border:    #26344C;
+  --gold:      #F3C24C;
+  --gold-deep: #D49A1E;
+  --gold-text: color-mix(in srgb, var(--gold) 70%, var(--gold-deep));
+  --icon-bg:   color-mix(in srgb, var(--gold) 13%, var(--surface2));
+  --icon-fg:   color-mix(in srgb, var(--gold) 78%, #fff);
+  --badge-bg:  color-mix(in srgb, var(--gold) 10%, transparent);
+  --navy:      #3B6CCB;
+  --navy-deep: #15346B;
+  --text:      #EAEEF7;
+  --muted:     #8696AE;
+  --on-gold:   #0B1224;
+  --r:         14px;
+  --r2:        10px;
+
+  /* Tailwind bridge */
+  --loa-bg:        10  16  32;
+  --loa-bg2:       13  21  38;
+  --loa-surface:   18  28  48;
+  --loa-surface2:  24  36  60;
+  --loa-border:    38  52  76;
+  --loa-gold:      243 194 76;
+  --loa-goldDim:   212 154 30;
+  --loa-navy:      59  108 203;
+  --loa-navy-deep: 21  52  107;
+  --loa-gem:       124 111 239;
+  --loa-text:      234 238 247;
+  --loa-muted:     134 150 174;
+  --loa-error:     196 64  64;
 }
 
-/* ── 다크 모드 ── */
-html[data-theme="dark"] {
-  --loa-bg:       15  15  19;
-  --loa-surface:  26  26  34;
-  --loa-surface2: 34  34  44;
-  --loa-border:   46  46  58;
-  --loa-gold:     224 185 106;
-  --loa-goldDim:  168 136 74;
-  --loa-gem:      124 111 239;
-  --loa-text:     232 230 227;
-  --loa-muted:    139 139 150;
-  --loa-error:    217 106 106;
-  background-color: rgb(var(--loa-bg));
+/* === 라이트 === */
+[data-theme="light"] {
+  --bg:        #FFFFFF;
+  --bg2:       #FFFFFF;
+  --surface:   #FFFFFF;
+  --surface2:  #F1F4FA;
+  --border:    #DCE3EF;
+  --gold:      #CC9910;
+  --gold-deep: #A87A0A;
+  --navy:      #23499A;
+  --navy-deep: #16335F;
+  --text:      #121A2A;
+  --muted:     #5C6A82;
+  --on-gold:   #FFFFFF;
+  --icon-bg:   #FFFFFF;
+  --icon-fg:   var(--gold);
+  --badge-bg:  #FFFFFF;
+
+  /* Tailwind bridge */
+  --loa-bg:        255 255 255;
+  --loa-bg2:       255 255 255;
+  --loa-surface:   255 255 255;
+  --loa-surface2:  241 244 250;
+  --loa-border:    220 227 239;
+  --loa-gold:      204 153 16;
+  --loa-goldDim:   168 122 10;
+  --loa-navy:      35  73  154;
+  --loa-navy-deep: 22  51  95;
+  --loa-text:      18  26  42;
+  --loa-muted:     92  106 130;
 }
 
 html, body, #root { height: 100%; }
 body {
-  background-color: rgb(var(--loa-bg));
-  color: rgb(var(--loa-text));
+  background-color: var(--bg);
+  color: var(--text);
   font-family: "Pretendard", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
   transition: background-color 0.2s, color 0.2s;
 }
 
+@keyframes loaFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: rgb(var(--loa-bg)); }
-::-webkit-scrollbar-thumb { background: rgb(var(--loa-border)); border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: rgb(var(--loa-muted)); }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }

@@ -18,12 +18,13 @@ router.get("/data", requireAuth, async (req, res) => {
 // 내 데이터 저장 (덮어쓰기)
 router.put("/data", requireAuth, async (req, res) => {
   try {
-    const { roster, favorites, presets } = req.body;
+    const { roster, favorites, presets, representativeChar } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     if (roster !== undefined) user.data.roster = roster;
     if (favorites !== undefined) user.data.favorites = favorites;
     if (presets !== undefined) user.data.presets = presets;
+    if (representativeChar !== undefined) user.data.representativeChar = representativeChar;
     await user.save();
     res.json(user.data);
   } catch {

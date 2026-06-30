@@ -4,7 +4,8 @@ const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
   const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem("loa-theme") === "dark";
+    const saved = localStorage.getItem("loa-theme");
+    return saved === null ? true : saved === "dark";
   });
 
   useEffect(() => {

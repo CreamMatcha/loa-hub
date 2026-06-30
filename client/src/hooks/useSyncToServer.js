@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { selectIsLoggedIn } from "../store/slices/authSlice";
-import { selectRosters } from "../store/slices/rosterSlice";
+import { selectRosters, selectRepresentativeChar } from "../store/slices/rosterSlice";
 import { selectFavoriteItems } from "../store/slices/favoritesSlice";
 import { apiSaveMyData } from "../api";
 
@@ -10,6 +10,7 @@ export function useSyncToServer() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const rosters = useSelector(selectRosters);
   const favoriteItems = useSelector(selectFavoriteItems);
+  const representativeChar = useSelector(selectRepresentativeChar);
   const timerRef = useRef(null);
   const isFirstRender = useRef(true);
 
@@ -21,9 +22,9 @@ export function useSyncToServer() {
     }
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
-      apiSaveMyData({ roster: rosters, favorites: favoriteItems }).catch(() => {});
+      apiSaveMyData({ roster: rosters, favorites: favoriteItems, representativeChar }).catch(() => {});
     }, 2000);
 
     return () => clearTimeout(timerRef.current);
-  }, [isLoggedIn, rosters, favoriteItems]);
+  }, [isLoggedIn, rosters, favoriteItems, representativeChar]);
 }

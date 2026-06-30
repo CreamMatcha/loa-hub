@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PersonFill, LockFill, HexagonFill } from "react-bootstrap-icons";
 import { setCredentials } from "../store/slices/authSlice";
-import { setRosters } from "../store/slices/rosterSlice";
+import { setRosters, restoreRepresentativeChar } from "../store/slices/rosterSlice";
 import { setFavorites, selectFavoriteItems } from "../store/slices/favoritesSlice";
 import { apiLogin, apiRegister, apiGetMyData } from "../api";
 
@@ -52,6 +52,10 @@ export default function Login() {
         const rosterData = serverData?.roster;
         if (Array.isArray(rosterData) && rosterData.length > 0 && rosterData[0]?.mainChar !== undefined) {
           dispatch(setRosters(rosterData));
+        }
+        // 대표 캐릭터
+        if (serverData?.representativeChar !== undefined) {
+          dispatch(restoreRepresentativeChar(serverData.representativeChar));
         }
       } catch (_) {}
 

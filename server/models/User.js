@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
       roster: { type: Array, default: [] },
       favorites: { type: Array, default: [] },
       presets: { type: Array, default: [] },
+      representativeChar: { type: String, default: null },
     },
   },
   { timestamps: true }

@@ -1,29 +1,37 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Search as SearchIcon, PersonPlusFill, ArrowClockwise, Trash, PersonFill, X } from "react-bootstrap-icons";
+import { Search as SearchIcon, PersonPlusFill, ArrowClockwise, Trash, PersonFill, X, ChevronUp, ChevronDown } from "react-bootstrap-icons";
 import {
   selectRosters,
   selectAllCharacters,
+  selectRepresentativeChar,
   addRoster,
   addSingleCharacter,
   removeRoster,
   clearRoster,
   updateCharacter,
+  reorderCharacters,
+  setRepresentativeChar,
 } from "../store/slices/rosterSlice";
 import { apiFetchRoster, apiFetchProfile } from "../api";
 import { store } from "../store";
 import CharacterCard from "../components/character/CharacterCard";
 
+const DESKTOP_QUERY = "(min-width: 640px)";
+
 export default function Dashboard() {
   const rosters = useSelector(selectRosters);
   const allCharacters = useSelector(selectAllCharacters);
+  const representativeChar = useSelector(selectRepresentativeChar);
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(null); // null | "roster" | "character"
+  const [loading, setLoading] = useState(null);
   const [error, setError] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia(DESKTOP_QUERY).matches);
   const [welcomeMsg, setWelcomeMsg] = useState(() => {
     if (!location.state?.justLoggedIn) return null;
     return location.state.isNewAccount
@@ -31,7 +39,13 @@ export default function Dashboard() {
       : "로그인 완료! 기기에 있던 즐겨찾기·원정대가 계정 데이터와 동기화됐어요.";
   });
 
-  // 새로고침 시 안내 배너가 다시 뜨지 않도록 라우터 state 제거
+  useEffect(() => {
+    const mq = window.matchMedia(DESKTOP_QUERY);
+    const handler = (e) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
   useEffect(() => {
     if (location.state?.justLoggedIn) {
       navigate(location.pathname, { replace: true, state: {} });
@@ -39,7 +53,6 @@ export default function Dashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 원정대 탭 진입 시 저장된 캐릭터들의 전투력 · 레벨 갱신
   useEffect(() => {
     const characters = store.getState().roster.rosters.flatMap((r) => r.characters);
     characters.forEach((c) => {
@@ -117,7 +130,7 @@ export default function Dashboard() {
         원정대 전체 또는 캐릭터 한 명씩 추가할 수 있어요.
       </p>
 
-      {/* 검색 입력 + 버튼 두 개 */}
+      {/* 검색 입력 + 버튼 */}
       <div className="mt-5 flex max-w-xl gap-2">
         <div className="relative flex-1">
           <SearchIcon
@@ -180,12 +193,25 @@ export default function Dashboard() {
                 ({rosters.length}개 그룹)
               </span>
             </h2>
-            <button
-              onClick={() => dispatch(clearRoster())}
-              className="text-sm text-loa-muted transition-colors hover:text-loa-error"
-            >
-              전체 비우기
-            </button>
+            <div className="flex items-center gap-3">
+              {isEditMode && (
+                <span className="hidden text-xs text-loa-muted sm:inline">
+                  {isDesktop ? "드래그해서 순서를 바꿔보세요" : "화살표로 순서를 바꿔보세요"}
+                </span>
+              )}
+              <button
+                onClick={() => setIsEditMode((v) => !v)}
+                className="rounded-lg border border-loa-border px-3 py-1.5 text-sm font-medium text-loa-muted transition-colors hover:border-loa-goldDim hover:text-loa-text"
+              >
+                {isEditMode ? "완료" : "순서 편집"}
+              </button>
+              <button
+                onClick={() => dispatch(clearRoster())}
+                className="text-sm text-loa-muted transition-colors hover:text-loa-error"
+              >
+                전체 비우기
+              </button>
+            </div>
           </div>
 
           <div className="space-y-8">
@@ -193,7 +219,12 @@ export default function Dashboard() {
               <RosterGroup
                 key={roster.mainChar}
                 roster={roster}
+                representativeChar={representativeChar}
+                onSetRepresentative={(name) => dispatch(setRepresentativeChar(name))}
                 onRemove={() => dispatch(removeRoster(roster.mainChar))}
+                isEditMode={isEditMode}
+                isDesktop={isDesktop}
+                onReorder={(from, to) => dispatch(reorderCharacters({ mainChar: roster.mainChar, from, to }))}
               />
             ))}
           </div>
@@ -208,8 +239,23 @@ export default function Dashboard() {
   );
 }
 
-function RosterGroup({ roster, onRemove }) {
+function RosterGroup({ roster, representativeChar, onSetRepresentative, onRemove, isEditMode, isDesktop, onReorder }) {
   const isIndividual = roster.mainChar === "개별 캐릭터";
+  const [dragIndex, setDragIndex] = useState(null);
+
+  function handleDrop(targetIndex) {
+    if (dragIndex !== null && dragIndex !== targetIndex) {
+      onReorder(dragIndex, targetIndex);
+    }
+    setDragIndex(null);
+  }
+
+  function handleMove(idx, direction) {
+    const target = idx + direction;
+    if (target < 0 || target >= roster.characters.length) return;
+    onReorder(idx, target);
+  }
+
   return (
     <div>
       <div className="mb-3 flex items-center justify-between border-b border-loa-border pb-2">
@@ -234,9 +280,49 @@ function RosterGroup({ roster, onRemove }) {
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {roster.characters.map((c) => (
-          <CharacterCard key={c.name} character={c} />
-        ))}
+        {roster.characters.map((c, idx) => {
+          const draggable = isEditMode && isDesktop;
+          return (
+            <div
+              key={c.name}
+              draggable={draggable}
+              onDragStart={() => setDragIndex(idx)}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={() => handleDrop(idx)}
+              onDragEnd={() => setDragIndex(null)}
+              className={`flex items-stretch gap-2 ${draggable ? "cursor-grab active:cursor-grabbing" : ""} ${dragIndex === idx ? "opacity-40" : ""}`}
+            >
+              {/* 모바일 화살표 */}
+              {isEditMode && !isDesktop && (
+                <div className="flex flex-col justify-center gap-1">
+                  <button
+                    onClick={() => handleMove(idx, -1)}
+                    disabled={idx === 0}
+                    aria-label="위로 이동"
+                    className="rounded-md border border-loa-border p-1 text-loa-muted transition-colors hover:border-loa-goldDim hover:text-loa-text disabled:cursor-not-allowed disabled:opacity-30"
+                  >
+                    <ChevronUp size={14} />
+                  </button>
+                  <button
+                    onClick={() => handleMove(idx, 1)}
+                    disabled={idx === roster.characters.length - 1}
+                    aria-label="아래로 이동"
+                    className="rounded-md border border-loa-border p-1 text-loa-muted transition-colors hover:border-loa-goldDim hover:text-loa-text disabled:cursor-not-allowed disabled:opacity-30"
+                  >
+                    <ChevronDown size={14} />
+                  </button>
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <CharacterCard
+                  character={c}
+                  isRepresentative={representativeChar === c.name}
+                  onSetRepresentative={() => onSetRepresentative(c.name)}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

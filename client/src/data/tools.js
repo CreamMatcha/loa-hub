@@ -4,7 +4,7 @@
 // tools: 해당 사이트의 도구 목록 [{ key, label, url }] — 선택 시 바로가기 URL로 사용
 
 export const CATEGORIES = [
-  { id: "spec", label: "스펙 수치화", icon: "GraphUp", desc: "캐릭터 스펙을 점수로 환산" },
+  { id: "main", label: "로펙 · 공식 · 커뮤니티", icon: "Globe2", desc: "공식 사이트 및 커뮤니티 바로가기" },
   { id: "search", label: "캐릭터 검색", icon: "Search", desc: "원정대 / 캐릭터 정보 조회" },
   { id: "upgrade", label: "강화 · 스펙업 효율", icon: "Hammer", desc: "재련 / 상재 / 스펙업 계산" },
   { id: "deal", label: "딜 지분 분석", icon: "BarChartLine", desc: "스킬별 딜 지분 / 치명타 계산" },
@@ -16,12 +16,12 @@ export const CATEGORIES = [
 ];
 
 export const TOOLS = [
-  // 1. 스펙 수치화
+  // 0. 공식 · 커뮤니티
   {
     id: "lopec",
     name: "로펙",
     url: "https://lopec.kr/",
-    category: "spec",
+    category: "main",
     type: "character",
     desc: "캐릭터 스펙을 수치화하여 점수로 보여주는 대표 사이트",
     charUrl: (name) => `https://lopec.kr/character/specPoint/${encodeURIComponent(name)}`,
@@ -30,7 +30,24 @@ export const TOOLS = [
       { key: "reward", label: "지옥 보상 효율 계산기", url: "https://lopec.kr/tool/reward" },
     ],
   },
+  {
+    id: "lostark-official",
+    name: "로스트아크",
+    url: "https://lostark.game.onstove.com/",
+    category: "main",
+    type: "tool",
+    desc: "로스트아크 공식 홈페이지",
+  },
+  {
+    id: "loa-inven",
+    name: "로스트아크 인벤",
+    url: "https://lostark.inven.co.kr/",
+    category: "main",
+    type: "tool",
+    desc: "국내 최대 로스트아크 커뮤니티",
+  },
 
+  // 1. 스펙 수치화
   // 2. 캐릭터 검색
   {
     id: "loawa",

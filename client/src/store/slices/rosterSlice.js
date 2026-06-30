@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // rosters: [{ mainChar, server, fetchedAt, characters: [...] }]
 const initialState = {
   rosters: [],
+  representativeChar: null, // 대표 캐릭터 이름 (null이면 미설정)
 };
 
 const rosterSlice = createSlice({
@@ -28,6 +29,11 @@ const rosterSlice = createSlice({
     // 원정대 전체 삭제
     removeRoster: (state, action) => {
       state.rosters = state.rosters.filter((r) => r.mainChar !== action.payload);
+      // 삭제된 원정대 소속 대표 캐릭터 초기화
+      const allNames = new Set(state.rosters.flatMap((r) => r.characters.map((c) => c.name)));
+      if (state.representativeChar && !allNames.has(state.representativeChar)) {
+        state.representativeChar = null;
+      }
     },
     // 단일 캐릭터 삭제 (모든 원정대 대상, 빈 원정대 자동 제거)
     removeCharacter: (state, action) => {
@@ -35,6 +41,9 @@ const rosterSlice = createSlice({
         r.characters = r.characters.filter((c) => c.name !== action.payload);
       });
       state.rosters = state.rosters.filter((r) => r.characters.length > 0);
+      if (state.representativeChar === action.payload) {
+        state.representativeChar = null;
+      }
     },
     // 캐릭터 필드 업데이트 (전투력 등)
     updateCharacter: (state, action) => {
@@ -56,20 +65,41 @@ const rosterSlice = createSlice({
       }
       roster.characters.push(action.payload);
     },
+    // 원정대 내 캐릭터 순서 변경
+    reorderCharacters: (state, action) => {
+      const { mainChar, from, to } = action.payload;
+      const roster = state.rosters.find((r) => r.mainChar === mainChar);
+      if (!roster) return;
+      const [item] = roster.characters.splice(from, 1);
+      roster.characters.splice(to, 0, item);
+    },
+    // 대표 캐릭터 설정 (같은 이름 재클릭 시 해제)
+    setRepresentativeChar: (state, action) => {
+      state.representativeChar = state.representativeChar === action.payload ? null : action.payload;
+    },
+    // 서버 복원용 직접 할당 (토글 없이)
+    restoreRepresentativeChar: (state, action) => {
+      state.representativeChar = action.payload ?? null;
+    },
     // 서버에서 복원
     setRosters: (state, action) => {
       state.rosters = action.payload;
     },
     clearRoster: (state) => {
       state.rosters = [];
+      state.representativeChar = null;
     },
   },
 });
 
-export const { addRoster, addSingleCharacter, removeRoster, removeCharacter, updateCharacter, setRosters, clearRoster } =
-  rosterSlice.actions;
+export const {
+  addRoster, addSingleCharacter, removeRoster, removeCharacter,
+  updateCharacter, reorderCharacters, setRosters, clearRoster,
+  setRepresentativeChar, restoreRepresentativeChar,
+} = rosterSlice.actions;
 
 export const selectRosters = (state) =>
   (state.roster?.rosters ?? []).filter((r) => Array.isArray(r.characters));
 export const selectAllCharacters = (state) => state.roster.rosters.flatMap((r) => r.characters);
+export const selectRepresentativeChar = (state) => state.roster.representativeChar ?? null;
 export default rosterSlice.reducer;
