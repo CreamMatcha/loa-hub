@@ -48,6 +48,9 @@ export const TOOLS = [
     category: "main",
     type: "tool",
     desc: "국내 최대 로스트아크 커뮤니티",
+    tools: [
+      { key: "chuchu", label: "30추 바로가기", url: "https://www.inven.co.kr/board/lostark/6271?my=chuchu" },
+    ],
   },
 
   // 1. 스펙 수치화
