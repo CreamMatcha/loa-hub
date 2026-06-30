@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { CATEGORIES, getToolsByCategory, TOOLS } from "../data/tools";
+import { CATEGORIES, getToolsByCategory, TOOLS, getCharacterTools } from "../data/tools";
 import { selectRosters, selectRepresentativeChar } from "../store/slices/rosterSlice";
+import { openLinks } from "../utils/openLinks";
 
 const ICON_PATHS = {
   spec:    '<polyline points="3 17 9 11 13 15 21 6"/><polyline points="15 6 21 6 21 12"/>',
@@ -149,25 +150,54 @@ export default function Home() {
               </div>
             </div>
             <div style={{ display: "flex", gap: 8 }}>
-              <div style={{
-                flex: 1, background: "var(--surface)", border: "1px solid var(--border)",
-                borderRadius: 8, padding: 9, textAlign: "center", fontSize: 12, fontWeight: 600, color: "var(--muted)",
-              }}>
-                로펙
-              </div>
-              <div style={{
-                flex: 1, background: "var(--surface)", border: "1px solid var(--border)",
-                borderRadius: 8, padding: 9, textAlign: "center", fontSize: 12, fontWeight: 600, color: "var(--muted)",
-              }}>
-                로아와
-              </div>
-              <Link to="/dashboard" style={{
-                flex: 1, background: "#fff", border: "1px solid var(--navy)",
-                borderRadius: 8, padding: 9, textAlign: "center", fontSize: 12, fontWeight: 700,
-                color: "var(--navy)", textDecoration: "none",
-              }}>
-                {firstChar ? "전체 열기" : "원정대 등록"}
-              </Link>
+              {firstChar ? (
+                <>
+                  <a
+                    href={`https://lopec.kr/character/specPoint/${encodeURIComponent(firstChar.name)}`}
+                    target="_blank" rel="noopener noreferrer"
+                    style={{
+                      flex: 1, background: "var(--surface)", border: "1px solid var(--border)",
+                      borderRadius: 8, padding: 9, textAlign: "center", fontSize: 12, fontWeight: 600,
+                      color: "var(--text)", textDecoration: "none",
+                    }}
+                  >
+                    로펙
+                  </a>
+                  <a
+                    href={`https://loawa.com/char/${encodeURIComponent(firstChar.name)}`}
+                    target="_blank" rel="noopener noreferrer"
+                    style={{
+                      flex: 1, background: "var(--surface)", border: "1px solid var(--border)",
+                      borderRadius: 8, padding: 9, textAlign: "center", fontSize: 12, fontWeight: 600,
+                      color: "var(--text)", textDecoration: "none",
+                    }}
+                  >
+                    로아와
+                  </a>
+                  <button
+                    onClick={() => {
+                      const urls = getCharacterTools().map((t) => t.charUrl(firstChar.name));
+                      const ok = openLinks(urls);
+                      if (!ok) alert("팝업이 차단되었어요. 브라우저에서 이 사이트의 팝업을 허용해 주세요.");
+                    }}
+                    style={{
+                      flex: 1, background: "#fff", border: "1px solid var(--navy)",
+                      borderRadius: 8, padding: 9, textAlign: "center", fontSize: 12, fontWeight: 700,
+                      color: "var(--navy)", cursor: "pointer", fontFamily: "inherit",
+                    }}
+                  >
+                    전체 열기
+                  </button>
+                </>
+              ) : (
+                <Link to="/dashboard" style={{
+                  flex: 1, background: "#fff", border: "1px solid var(--navy)",
+                  borderRadius: 8, padding: 9, textAlign: "center", fontSize: 12, fontWeight: 700,
+                  color: "var(--navy)", textDecoration: "none",
+                }}>
+                  원정대 등록
+                </Link>
+              )}
             </div>
           </div>
         </div>
