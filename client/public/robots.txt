@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://loa-hub-678eb913f719.herokuapp.com/sitemap.xml
+Sitemap: https://loahub.pages.games/sitemap.xml

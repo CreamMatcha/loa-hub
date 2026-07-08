@@ -10,7 +10,8 @@ router.get("/data", requireAuth, async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     res.json(user.data);
-  } catch {
+  } catch (e) {
+    console.error("[ME] 데이터 조회 실패:", e);
     res.status(500).json({ message: "데이터 조회 중 오류가 발생했습니다." });
   }
 });
@@ -18,16 +19,18 @@ router.get("/data", requireAuth, async (req, res) => {
 // 내 데이터 저장 (덮어쓰기)
 router.put("/data", requireAuth, async (req, res) => {
   try {
-    const { roster, favorites, presets, representativeChar } = req.body;
+    const { roster, favorites, presets, representativeChar, dataVersion } = req.body;
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
     if (roster !== undefined) user.data.roster = roster;
     if (favorites !== undefined) user.data.favorites = favorites;
     if (presets !== undefined) user.data.presets = presets;
     if (representativeChar !== undefined) user.data.representativeChar = representativeChar;
+    if (dataVersion !== undefined) user.data.dataVersion = dataVersion;
     await user.save();
     res.json(user.data);
-  } catch {
+  } catch (e) {
+    console.error("[ME] 데이터 저장 실패:", e);
     res.status(500).json({ message: "데이터 저장 중 오류가 발생했습니다." });
   }
 });

@@ -23,6 +23,7 @@ router.post("/register", async (req, res) => {
     const token = signToken(user);
     res.status(201).json({ token, user: user.toSafeJSON() });
   } catch (e) {
+    console.error("[AUTH] 회원가입 실패:", e);
     res.status(500).json({ message: "회원가입 처리 중 오류가 발생했습니다." });
   }
 });
@@ -40,6 +41,7 @@ router.post("/login", async (req, res) => {
     const token = signToken(user);
     res.json({ token, user: user.toSafeJSON() });
   } catch (e) {
+    console.error("[AUTH] 로그인 실패:", e);
     res.status(500).json({ message: "로그인 처리 중 오류가 발생했습니다." });
   }
 });

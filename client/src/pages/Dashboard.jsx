@@ -60,7 +60,9 @@ export default function Dashboard() {
         .then((profile) => {
           dispatch(updateCharacter({ name: c.name, combatPower: profile.combatPower ?? null, level: profile.level }));
         })
-        .catch(() => {});
+        .catch((e) => {
+          console.warn(`[PROFILE] ${c.name} 전투력 갱신 실패:`, e.response?.status ?? e.message);
+        });
     });
   }, [dispatch]);
 

@@ -38,7 +38,15 @@ export default function Login() {
             arr.map((x) =>
               typeof x === "string" ? { toolId: x, toolKey: null } : x
             );
-          const serverItems = toItems(serverData.favorites);
+          let serverItems = toItems(serverData.favorites);
+          // v4 미만 서버 데이터: 로아차트 즐겨찾기는 더보기 계산기를 가리키던 것 → 하위 도구로 이관
+          if ((serverData.dataVersion ?? 0) < 4) {
+            serverItems = serverItems.map((it) =>
+              it.toolId === "loachart" && (it.toolKey ?? null) === null
+                ? { ...it, toolKey: "reward" }
+                : it
+            );
+          }
           const merged = [...localFavoriteItems];
           for (const si of serverItems) {
             const exists = merged.some(
@@ -57,7 +65,9 @@ export default function Login() {
         if (serverData?.representativeChar !== undefined) {
           dispatch(restoreRepresentativeChar(serverData.representativeChar));
         }
-      } catch (_) {}
+      } catch (e) {
+        console.warn("[LOGIN] 서버 데이터 병합 실패 — 로컬 데이터로 계속:", e.response?.status ?? e.message);
+      }
 
       navigate("/dashboard", { state: { justLoggedIn: true, isNewAccount: mode === "register" } });
     } catch (e) {

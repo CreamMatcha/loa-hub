@@ -1,11 +1,19 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import * as Icons from "react-bootstrap-icons";
 import { Search as SearchIcon } from "react-bootstrap-icons";
-import { CATEGORIES, TOOLS } from "../data/tools";
+import { CATEGORIES, TOOLS, getToolsByCategory } from "../data/tools";
 import ToolCard from "../components/tools/ToolCard";
 
 export default function Tools() {
   const [query, setQuery] = useState("");
+  const { hash } = useLocation();
+
+  // React Router는 해시 앵커로 자동 스크롤하지 않음 (홈 카테고리 카드 → /tools#카테고리)
+  useEffect(() => {
+    if (!hash) return;
+    document.getElementById(hash.slice(1))?.scrollIntoView();
+  }, [hash]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -14,7 +22,8 @@ export default function Tools() {
       (t) =>
         t.name.toLowerCase().includes(q) ||
         t.desc.toLowerCase().includes(q) ||
-        CATEGORIES.find((c) => c.id === t.category)?.label.toLowerCase().includes(q)
+        CATEGORIES.find((c) => c.id === t.category)?.label.toLowerCase().includes(q) ||
+        t.tools?.some((sub) => sub.label.toLowerCase().includes(q))
     );
   }, [query]);
 
@@ -55,7 +64,7 @@ export default function Tools() {
         </div>
       ) : (
         CATEGORIES.map((cat) => {
-          const tools = TOOLS.filter((t) => t.category === cat.id);
+          const tools = getToolsByCategory(cat.id);
           if (tools.length === 0) return null;
           const Icon = Icons[cat.icon] || Icons.Grid3x3GapFill;
           return (

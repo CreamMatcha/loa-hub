@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema(
       favorites: { type: Array, default: [] },
       presets: { type: Array, default: [] },
       representativeChar: { type: String, default: null },
+      // 저장 데이터 스키마 버전 — 클라이언트가 구버전 데이터 마이그레이션 여부 판단에 사용
+      dataVersion: { type: Number, default: 0 },
     },
   },
   { timestamps: true }

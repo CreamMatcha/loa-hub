@@ -62,7 +62,15 @@ router.get("/siblings/:name", async (req, res) => {
   } catch (e) {
     const code = e.response?.status;
     if (code === 404) return res.status(404).json({ message: "캐릭터를 찾을 수 없습니다." });
-    if (code === 401) return res.status(502).json({ message: "API 키가 유효하지 않습니다." });
+    if (code === 401) {
+      console.error("[LOSTARK] API 키 인증 실패(401) — LOSTARK_API_KEY 확인 필요");
+      return res.status(502).json({ message: "API 키가 유효하지 않습니다." });
+    }
+    if (code === 429) {
+      console.warn(`[LOSTARK] siblings(${name}) 호출량 초과(429)`);
+      return res.status(429).json({ message: "로스트아크 API 호출량을 초과했어요. 잠시 후 다시 시도해 주세요." });
+    }
+    console.error(`[LOSTARK] siblings(${name}) 실패:`, code ?? e.code ?? e.message);
     res.status(502).json({ message: "로스트아크 API 조회에 실패했습니다." });
   }
 });
@@ -95,6 +103,11 @@ router.get("/profile/:name", async (req, res) => {
   } catch (e) {
     const code = e.response?.status;
     if (code === 404) return res.status(404).json({ message: "캐릭터를 찾을 수 없습니다." });
+    if (code === 429) {
+      console.warn(`[LOSTARK] profile(${name}) 호출량 초과(429)`);
+      return res.status(429).json({ message: "로스트아크 API 호출량을 초과했어요. 잠시 후 다시 시도해 주세요." });
+    }
+    console.error(`[LOSTARK] profile(${name}) 실패:`, code ?? e.code ?? e.message);
     res.status(502).json({ message: "로스트아크 API 조회에 실패했습니다." });
   }
 });
